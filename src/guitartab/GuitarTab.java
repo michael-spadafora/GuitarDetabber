@@ -183,7 +183,7 @@ public class GuitarTab extends Application{
 
     private void chooseFile() {
         FileChooser fc = new FileChooser();
-        fc.setInitialDirectory(new File ("C:\\Users\\mike spad\\Documents\\NetBeansProjects\\cse214\\guitarTab\\src\\guitartab"));
+//        fc.setInitialDirectory(new File ("C:\\Users\\mike spad\\Documents\\NetBeansProjects\\cse214\\guitarTab\\src\\guitartab"));
         fc.setTitle("Open Tab File");
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("text files", "*.txt"));
         Stage stage = new Stage();
