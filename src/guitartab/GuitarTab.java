@@ -1,20 +1,39 @@
 package guitartab;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
-public class GuitarTab {
+
+public class GuitarTab extends Application{
+    File tabFile = null;
+    TextArea noteArea;
 
     public static void main(String[] args) {
+        Application.launch(args);
+    }
+
+    public void parseFile() {
         Scanner in = null;
-        File file = new File("C:\\Users\\mike spad\\Documents\\NetBeansProjects\\guitarTab\\src\\guitartab\\guitartab.txt");
         try {
-            in = new Scanner(file);
+            in = new Scanner(tabFile);
         } catch (FileNotFoundException e) {
-            System.out.print("File not found.");
+//            System.out.print("File not found.");
+            return;
         }
 
         String HiEString = in.nextLine();
@@ -25,7 +44,6 @@ public class GuitarTab {
         String LowEString = in.nextLine();
 
         int length = BString.length();
-
         String[] strings = new String[]{HiEString, BString,
             GString, DString, AString, LowEString};
 
@@ -104,9 +122,7 @@ public class GuitarTab {
             }
             finalOutput.add(note);
         }
-
-        System.out.print(finalOutput);
-        in.close();
+        noteArea.setText(finalOutput.toString());
 
     }
 
@@ -118,4 +134,63 @@ public class GuitarTab {
         }
         return true;
     }
+
+    /**
+     * The main entry point for all JavaFX applications.
+     * The start method is called after the init method has returned,
+     * and after the system is ready for the application to begin running.
+     * <p>
+     * <p>
+     * NOTE: This method is called on the JavaFX Application Thread.
+     * </p>
+     *
+     * @param primaryStage the primary stage for this application, onto which
+     *                     the application scene can be set. The primary stage will be embedded in
+     *                     the browser if the application was launched as an applet.
+     *                     Applications may create other stages, if needed, but they will not be
+     *                     primary stages and will not be embedded in the browser.
+     */
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+
+        Button chooseFile = new Button("choose file");
+
+        TextArea tabArea = new TextArea();
+        noteArea = new TextArea();
+
+        chooseFile.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                chooseFile();
+                if (tabFile!= null)
+                    parseFile();
+
+            }
+        });
+
+        VBox vbox = new VBox();
+        vbox.getChildren().add(chooseFile);
+//        vbox.getChildren().add(tabArea);
+        vbox.getChildren().add(noteArea);
+        noteArea.setEditable(false);
+
+        Scene scene = new Scene(vbox, 500, 500);
+
+        primaryStage.setScene(scene);
+        primaryStage.show();
+
+    }
+
+    private void chooseFile() {
+        FileChooser fc = new FileChooser();
+        fc.setInitialDirectory(new File ("C:\\Users\\mike spad\\Documents\\NetBeansProjects\\cse214\\guitarTab\\src\\guitartab"));
+        fc.setTitle("Open Tab File");
+        fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("text files", "*.txt"));
+        Stage stage = new Stage();
+        stage.setScene((new Scene(new VBox(),100,100)));
+        tabFile = fc.showOpenDialog(stage);
+//        stage.show();
+    }
+
+
 }
